@@ -23,7 +23,7 @@ Alternatively, add the following to composer.json and run `composer install`
         }
     ],
     "require": {
-        "dnadesign/silverstripe-http2serverpush.": "dev-master",
+        "dnadesign/silverstripe-http2serverpush": "dev-master",
     }
 
 The module will currently automatically extend the Page_Controller

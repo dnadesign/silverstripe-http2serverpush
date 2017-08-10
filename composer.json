@@ -9,11 +9,8 @@
     "email": "jim.perry@dna.co.nz"
   }],
   "require": {
-    "silverstripe/framework": "3.5",
-    "silverstripe/cms": "3.5"
-  },
-  "require-dev": {
-    "phpunit/PHPUnit": "~3.7@stable"
+    "silverstripe/framework": "~3.5",
+    "silverstripe/cms": "~3.5"
   },
   "extra": {
     "installer-name": "http2serverpush"
