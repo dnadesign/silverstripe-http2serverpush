@@ -37,11 +37,10 @@ class Page_ControllerHttp2Extension extends Extension
 
                     $diffPushes = [];
 
-                    foreach ($versionedPushes as $id => $asset) {
+                    foreach ($versionedPushes as $versionedId => $asset) {
 
                         // Collate assets which are new or have changed
-                        if (!array_key_exists($id, $cookiePushes)
-                            || $asset['hash'] !== $cookiePushes[$id]['hash']) {
+                        if (!array_key_exists($versionedId, $cookiePushes)) {
                             array_push($diffPushes, $asset);
                         }
                     }
@@ -76,15 +75,13 @@ class Page_ControllerHttp2Extension extends Extension
         $themePath = BASE_PATH . '/' . SSViewer::get_theme_folder();
         $versionedPushes = [];
 
-        // TODO: Look into using the hash as the array key
         foreach ($pushes as $type => $links) {
             foreach ($links as $link) {
                 if (is_file($themePath . $link)) {
-                    array_push($versionedPushes, array(
-                            'type' => $type,
-                            'link' => $link,
-                            'hash' => substr(md5_file($themePath . $link), 0, 8)
-                        )
+                    $versionedId = substr(md5_file($themePath . $link), 0, 8);
+                    $versionedPushes[$versionedId] = array(
+                        'type' => $type,
+                        'link' => $link
                     );
                 }
             }
