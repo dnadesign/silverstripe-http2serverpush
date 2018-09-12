@@ -9,13 +9,13 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 
 /**
- * Class Page_ControllerHttp2Extension
+ * Class PageControllerHttp2Extension
  *
  * Cookie-cached implementation of HTTP2 server push.
  * Based loosely on https://css-tricks.com/cache-aware-server-push/
  *
  */
-class Page_ControllerHttp2Extension extends Extension
+class PageControllerHttp2Extension extends Extension
 {
 
     public function onAfterInit()
