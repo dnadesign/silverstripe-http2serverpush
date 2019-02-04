@@ -1,13 +1,21 @@
 <?php
 
+namespace DNADesign\Http2Extension;
+
+use SilverStripe\Core\Extension;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Cookie;
+use SilverStripe\View\SSViewer;
+use SilverStripe\View\ThemeResourceLoader;
+
 /**
- * Class Page_ControllerHttp2Extension
+ * Class PageControllerHttp2Extension
  *
  * Cookie-cached implementation of HTTP2 server push.
  * Based loosely on https://css-tricks.com/cache-aware-server-push/
  *
  */
-class Page_ControllerHttp2Extension extends Extension
+class PageControllerHttp2Extension extends Extension
 {
 
     public function onAfterInit()
@@ -58,11 +66,15 @@ class Page_ControllerHttp2Extension extends Extension
 
     public function getPushString($versionedPushes)
     {
-        $themeURL = Director::baseURL() . SSViewer::get_theme_folder();
+        $themes = SSViewer::get_themes();
+
         $pushString = '';
 
         foreach ($versionedPushes as $asset) {
-            $pushString .= '<' . $themeURL . $asset['link'] . '>; rel=preload; as=' . $asset['type'];
+
+            $themesFilePath = ThemeResourceLoader::inst()->findThemedResource($asset['link'], $themes);
+
+            $pushString .= '<' . 'resources/' . $themesFilePath . '>; rel=preload; as=' . $asset['type'];
             if ($asset !== end($versionedPushes)) {
                 $pushString .= ", ";
             }
@@ -72,13 +84,16 @@ class Page_ControllerHttp2Extension extends Extension
 
     public function createVersionedList($pushes)
     {
-        $themePath = BASE_PATH . '/' . SSViewer::get_theme_folder();
+        $themes = SSViewer::get_themes();
         $versionedPushes = [];
 
         foreach ($pushes as $type => $links) {
             foreach ($links as $link) {
-                if (is_file($themePath . $link)) {
-                    $versionedId = substr(md5_file($themePath . $link), 0, 8);
+
+                $themesFilePath = ThemeResourceLoader::inst()->findThemedResource($link, $themes);
+
+                if (is_file('resources/' . $themesFilePath)) {
+                    $versionedId = substr(md5_file('resources/' . $themesFilePath), 0, 8);
                     $versionedPushes[$versionedId] = array(
                         'type' => $type,
                         'link' => $link
@@ -89,5 +104,4 @@ class Page_ControllerHttp2Extension extends Extension
 
         return $versionedPushes;
     }
-
 }
